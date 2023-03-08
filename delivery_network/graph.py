@@ -1,3 +1,5 @@
+from heapq import *
+
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -68,30 +70,93 @@ class Graph:
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
     
+        """parcours en largeur : utiliser pour le plus court chemin BFS"""
+        """parcous en profondeur : utiliser pour une recherche de chemin DFS"""
+        
+    
 
     def get_path_with_power(self, src, dest, power):
-        raise NotImplementedError
-    
+        list = self.connected_components()
+        i = 0
+        while i < len(list) and src not in list[i]:
+            i += 1
+        if i == len(list): 
+            return None
+        if dest not in list[i] : 
+            return None
+        return self.dijkstra(src, dest, power)
+
+    def dijkstra(self, s, t, power):
+        Vu = set()
+        d = {s: 0}
+        prédecesseurs = {}
+        suivants = [(0, s)]  # Â tas de couples (d[x],x)
+        while suivants != []:
+            dx, x = heappop(suivants)
+            if x in Vu:
+                continue
+            Vu.add(x)
+            for y, p, w in self.graph[x]:
+                if y in Vu:
+                    continue
+                dy = dx + w
+                if (y not in d or d[y] > dy) and power >= p:
+                    d[y] = dy
+                    heappush(suivants, (dy, y))
+                    prédecesseurs[y] = x
+        path = [t]
+        if t not in d : return None
+        x = t
+        while x != s:
+            x = prédecesseurs[x]
+            path.insert(0, x)
+        return path
 
     def connected_components(self):
-        raise NotImplementedError
+        list_components = []
+        visited_nodes = {noeud: False for noeud in self.nodes}
 
+        """création d'un dictionnaire de noeuds avec false si non visité"""
+
+        def dfs(node):
+            """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
+            on crée un dictionnaire qui prend comme clé le noeud et qui ajoute en valeur seulement le noeud voisin
+            le noeud voisin est bien contenu dans values = (nodes2, power_min, dist) """
+            """liste de liste : on va faire un dict"""
+            component = [node]
+            for neighbour in self.graph[node]:
+                neighbour = neighbour[0]
+                # on ne retient que la première composante de la value pour avoir le voisin
+                if not visited_nodes[neighbour]:
+                    visited_nodes[neighbour] = True
+                    component += dfs(neighbour)
+            return component
+
+        for noeud in self.nodes:
+            if not visited_nodes[noeud]:
+                list_components.append(dfs(noeud))
+
+        return list_components
+        print(list_components)
+
+    visited = set()
 
     def connected_components_set(self):
-        """
-        The result should be a set of frozensets (one per component), 
-        For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
-        """
         return set(map(frozenset, self.connected_components()))
-    
+        print(set(map(frozenset, self.connected_components())))
+
     def min_power(self, src, dest):
         """
-        Should return path, min_power. 
+        Should return path, min_power.
         """
-        raise NotImplementedError
+        p = 0
+        while self.get_path_with_power(src, dest, p) == None :
+            p += 1
+        return self.get_path_with_power(src, dest, p), p
+    """on suppose ici que la puissance est toujours un entier naturel"""
 
 
-def graph_from_file(filename):
+def graph_from_file(filename): 
     """
     Reads a text file and returns the graph as an object of the Graph class.
 
