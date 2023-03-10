@@ -1,4 +1,5 @@
 from heapq import *
+#from graphviz import Graph as gr
 
 class Graph:
     """
@@ -285,3 +286,17 @@ class Graph:
             return path,p_min
         return dijkstra_unique(X, src, dest)
 
+    def representation(self, nom):
+            graphe = gr(format='png', engine="circo") 
+            key=self.graph.keys()
+            sauv=[]
+            for i in key: # on créer tous les sommets
+                print(i)
+                graphe.node(f"{i}",f"{i}")
+                for voisin in self.graph[i]:
+                    if voisin[0] not in sauv:
+                        graphe.edge(f"{i}", f"{voisin[0]}", label=f"p={voisin[1]},\n d={voisin[2]}")
+                sauv.append(i)
+            graphe.render(f"{nom}.dot")
+            print(graphe)
+            return()
