@@ -156,118 +156,118 @@ class Graph:
     """on suppose ici que la puissance est toujours un entier naturel"""
 
 
-def graph_from_file(filename): 
-    """
-    Reads a text file and returns the graph as an object of the Graph class.
+    def graph_from_file(filename): 
+        """
+        Reads a text file and returns the graph as an object of the Graph class.
 
-    The file should have the following format: 
-        The first line of the file is 'n m'
-        The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
-        The nodes (node1, node2) should be named 1..n
-        All values are integers.
+        The file should have the following format: 
+            The first line of the file is 'n m'
+            The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
+            The nodes (node1, node2) should be named 1..n
+            All values are integers.
 
-    Parameters: 
-    -----------
-    filename: str
-        The name of the file
+        Parameters: 
+        -----------
+        filename: str
+            The name of the file
 
-    Outputs: 
-    -----------
-    g: Graph
-        An object of the class Graph with the graph from file_name.
-    """
-    with open(filename, "r") as file:
-        n, m = map(int, file.readline().split())
-        g = Graph(range(1, n+1))
-        for _ in range(m):
-            edge = list(map(int, file.readline().split()))
-            if len(edge) == 3:
-                node1, node2, power_min = edge
-                g.add_edge(node1, node2, power_min) # will add dist=1 by default
-            elif len(edge) == 4:
-                node1, node2, power_min, dist = edge
-                g.add_edge(node1, node2, power_min, dist)
-            else:
-                raise Exception("Format incorrect")
-    return g
-
-def makeset(pik,rank,node):
-    pik[node]=node
-    rank[node]=0
-    return None
-
-def find(pik,node):
-    if pik[node] != node:
-        pik[node]= find(pik[node])
-    return pik[node]
-
-def union(pik,rank,node1,node2):
-    r1=find(pik,node1)
-    r2=find(pik,node2)
-    if r1==r2: return None
-    if rank[r1]>rank[r2]:
-        pik[r2]=r1
-    else:
-        pik[r1]=r2
-        if rank[r1]==rank[r2]:
-            rank[r2]+=1
-    return None
-
-def kruskal(self):
-    pik={}
-    rank={}
-    for node in self.nodes:
-        makeset(pik,rank,node)
-    X=Graph([])
-    edges=[]
-    for node in self.graph:
-        for edge in self.graph[node]:
-            edges.append((node,edge[0],edge[1]))
-    edges.sort(key =lambda x: x[2])
-    for edge in edges:
-        if find(pik,edge[0])!=find(pik,edge[1]):
-            add_edge(X,edge[0],edge[1],edge[2])
-            union(pik,rank,edge[0],edge[1])
-    return(X)
-
-def power_min_ameliore(self,src,dest):
-    list = self.connected_components()
-    i = 0
-    while i < len(list) and src not in list[i]:
-        i += 1
-    if i == len(list):
-        return None
-    if dest not in list[i]:
-        return None
-    X=kruskal(self)
-    def power(self,node1,node2):
-        voisins=self.graph[node1]
-        n=len(voisins)
-        k=0
-        while voisins[k][0]!=node2:
-            k+=1
-        return voisins[k][1]
-    def dijkstra_unique(self, s, t):
-        Vu = set()
-        prédecesseurs = {}
-        suivants = [s]
-        while suivants != []:
-            x = heappop(suivants)
-            if x in Vu:
-                continue
-            Vu.add(x)
-            for y, p, w in self.graph[x]:
-                if y in Vu:
-                    continue
+        Outputs: 
+        -----------
+        g: Graph
+            An object of the class Graph with the graph from file_name.
+        """
+        with open(filename, "r") as file:
+            n, m = map(int, file.readline().split())
+            g = Graph(range(1, n+1))
+            for _ in range(m):
+                edge = list(map(int, file.readline().split()))
+                if len(edge) == 3:
+                    node1, node2, power_min = edge
+                    g.add_edge(node1, node2, power_min) # will add dist=1 by default
+                elif len(edge) == 4:
+                    node1, node2, power_min, dist = edge
+                    g.add_edge(node1, node2, power_min, dist)
                 else:
-                    heappush(suivants, y)
-                    prédecesseurs[y] = x
-        path = [t]
-        x = t
-        p_min=0
-        while x != s:
-            p_min=max(p_min,power(self,x,prédecesseurs[x]))
-            x = prédecesseurs[x]
-            path.insert(0, x)
-        return path,p_min
-    return dijkstra_unique(X, src, dest)
+                    raise Exception("Format incorrect")
+        return g
+
+    def makeset(pik,rank,node):
+        pik[node]=node
+        rank[node]=0
+        return None
+
+    def find(pik,node):
+        if pik[node] != node:
+            pik[node]= find(pik[node])
+        return pik[node]
+
+    def union(pik,rank,node1,node2):
+        r1=find(pik,node1)
+        r2=find(pik,node2)
+        if r1==r2: return None
+        if rank[r1]>rank[r2]:
+            pik[r2]=r1
+        else:
+            pik[r1]=r2
+            if rank[r1]==rank[r2]:
+                rank[r2]+=1
+        return None
+
+    def kruskal(self):
+        pik={}
+        rank={}
+        for node in self.nodes:
+            makeset(pik,rank,node)
+        X=Graph([])
+        edges=[]
+        for node in self.graph:
+            for edge in self.graph[node]:
+                edges.append((node,edge[0],edge[1]))
+        edges.sort(key =lambda x: x[2])
+        for edge in edges:
+            if find(pik,edge[0])!=find(pik,edge[1]):
+                add_edge(X,edge[0],edge[1],edge[2])
+                union(pik,rank,edge[0],edge[1])
+        return(X)
+
+    def power_min_ameliore(self,src,dest):
+        list = self.connected_components()
+        i = 0
+        while i < len(list) and src not in list[i]:
+            i += 1
+        if i == len(list):
+            return None
+        if dest not in list[i]:
+            return None
+        X=kruskal(self)
+        def power(self,node1,node2):
+            voisins=self.graph[node1]
+            n=len(voisins)
+            k=0
+            while voisins[k][0]!=node2:
+                k+=1
+            return voisins[k][1]
+        def dijkstra_unique(self, s, t):
+            Vu = set()
+            prédecesseurs = {}
+            suivants = [s]
+            while suivants != []:
+                x = heappop(suivants)
+                if x in Vu:
+                    continue
+                Vu.add(x)
+                for y, p, w in self.graph[x]:
+                    if y in Vu:
+                        continue
+                    else:
+                        heappush(suivants, y)
+                        prédecesseurs[y] = x
+            path = [t]
+            x = t
+            p_min=0
+            while x != s:
+                p_min=max(p_min,power(self,x,prédecesseurs[x]))
+                x = prédecesseurs[x]
+                path.insert(0, x)
+            return path,p_min
+        return dijkstra_unique(X, src, dest)
