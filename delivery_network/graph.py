@@ -155,6 +155,19 @@ class Graph:
         return self.get_path_with_power(src, dest, p), p
     """on suppose ici que la puissance est toujours un entier naturel"""
 
+    def min_power2(self,src,dest):
+        p1=0
+        p2=0
+        for nodes in self.graph:
+            for voisins in self.graph[nodes]:
+                p2=max(p2,voisins[1])
+        while p1<p2:
+            p=(p1+p2)//2
+            if self.get_path_with_power(src,dest,p)==None:
+                p1=p
+            else:
+                p2=p
+        return self.get_path_with_power(src,dest,p)
 
     def graph_from_file(filename): 
         """
@@ -198,12 +211,12 @@ class Graph:
 
     def find(pik,node):
         if pik[node] != node:
-            pik[node]= find(pik[node])
+            pik[node]= Graph.find(pik,pik[node])
         return pik[node]
 
     def union(pik,rank,node1,node2):
-        r1=find(pik,node1)
-        r2=find(pik,node2)
+        r1=Graph.find(pik,node1)
+        r2=Graph.find(pik,node2)
         if r1==r2: return None
         if rank[r1]>rank[r2]:
             pik[r2]=r1
@@ -217,7 +230,7 @@ class Graph:
         pik={}
         rank={}
         for node in self.nodes:
-            makeset(pik,rank,node)
+            Graph.makeset(pik,rank,node)
         X=Graph([])
         edges=[]
         for node in self.graph:
@@ -225,9 +238,9 @@ class Graph:
                 edges.append((node,edge[0],edge[1]))
         edges.sort(key =lambda x: x[2])
         for edge in edges:
-            if find(pik,edge[0])!=find(pik,edge[1]):
-                add_edge(X,edge[0],edge[1],edge[2])
-                union(pik,rank,edge[0],edge[1])
+            if Graph.find(pik,edge[0])!=Graph.find(pik,edge[1]):
+                Graph.add_edge(X,edge[0],edge[1],edge[2])
+                Graph.union(pik,rank,edge[0],edge[1])
         return(X)
 
     def power_min_ameliore(self,src,dest):
@@ -239,7 +252,7 @@ class Graph:
             return None
         if dest not in list[i]:
             return None
-        X=kruskal(self)
+        X=Graph.kruskal(self)
         def power(self,node1,node2):
             voisins=self.graph[node1]
             n=len(voisins)
