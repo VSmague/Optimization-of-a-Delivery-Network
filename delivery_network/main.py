@@ -8,7 +8,7 @@ print(g)
 
 print(Graph.kruskal(g))
 print(Graph.power_min_ameliore(g, 1, 4))
-#print(Graph.min_power2(g, 1, 4))
+print(Graph.min_power2(g, 1, 4))
 
 def temps(f,k):
     import time
@@ -33,5 +33,5 @@ def temps(f,k):
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
     return nb_trajets*sum(temps)/len(temps)
 
-temps(Graph.power_min_ameliore,1)
-#probleme pour routes plus grandes que 2 car trop de neouds/aretes
+#temps(Graph.power_min_ameliore,1)
+#probleme pour routes plus grandes que 2 car dfs non recursif terminal, donc trop de profondeur de recursivité, à corriger!
