@@ -83,7 +83,7 @@ class Graph:
             i += 1
         if i == len(list): 
             return None
-        if dest not in list[i] : 
+        if dest not in list[i]:
             return None
         return self.dijkstra(src, dest, power)
 
@@ -164,11 +164,11 @@ class Graph:
                 p2=max(p2,voisins[1])
         while p1<p2:
             p=(p1+p2)//2
-            if self.get_path_with_power(src,dest,p)==None:
+            if Graph.get_path_with_power(self,src,dest,p)==None:
                 p1=p
             else:
                 p2=p
-        return self.get_path_with_power(src,dest,p)
+        return Graph.get_path_with_power(self,src,dest,p)
 
     def graph_from_file(filename): 
         """
@@ -287,16 +287,16 @@ class Graph:
         return dijkstra_unique(X, src, dest)
 
     def representation(self, nom):
-            graphe = gr(format='png', engine="circo") 
-            key=self.graph.keys()
-            sauv=[]
-            for i in key: # on créer tous les sommets
-                print(i)
-                graphe.node(f"{i}",f"{i}")
-                for voisin in self.graph[i]:
-                    if voisin[0] not in sauv:
-                        graphe.edge(f"{i}", f"{voisin[0]}", label=f"p={voisin[1]},\n d={voisin[2]}")
-                sauv.append(i)
-            graphe.render(f"{nom}.dot")
-            print(graphe)
-            return()
+        graphe = gr(format='png', engine="circo") 
+        key=self.graph.keys()
+        sauv=[]
+        for i in key: # on créer tous les sommets
+            print(i)
+            graphe.node(f"{i}",f"{i}")
+            for voisin in self.graph[i]:
+                if voisin[0] not in sauv:
+                    graphe.edge(f"{i}", f"{voisin[0]}", label=f"p={voisin[1]},\n d={voisin[2]}")
+            sauv.append(i)
+        graphe.render(f"{nom}.dot")
+        print(graphe)
+        return()

@@ -32,6 +32,6 @@ def temps(f,k):
         temps.append(t_stop-t_start)
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
     return nb_trajets*sum(temps)/len(temps)
-
-#temps(Graph.power_min_ameliore,1)
+temps(Graph.min_power_ameliore,2)
+temps(Graph.power_min_ameliore,1)
 #probleme pour routes plus grandes que 2 car dfs non recursif terminal, donc trop de profondeur de recursivité, à corriger!
