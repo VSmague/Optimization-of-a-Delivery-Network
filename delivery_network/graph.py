@@ -1,5 +1,5 @@
 from heapq import *
-#from graphviz import Graph as gr
+from graphviz import Graph as gr
 
 class Graph:
     """
@@ -70,11 +70,8 @@ class Graph:
         self.graph[node1].append((node2, power_min, dist))
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
-    
-        """parcours en largeur : utiliser pour le plus court chemin BFS"""
-        """parcous en profondeur : utiliser pour une recherche de chemin DFS"""
-        
-    
+        #parcours en largeur : utiliser pour le plus court chemin BFS
+        #parcous en profondeur : utiliser pour une recherche de chemin DFS=
 
     def get_path_with_power(self, src, dest, power):
         list = self.connected_components()
@@ -82,15 +79,15 @@ class Graph:
         while i < len(list) and src not in list[i]:
             i += 1
         if i == len(list): 
-            return None
+            return "pas de source"
         if dest not in list[i]:
-            return None
+            return "source et destination non connectées"
         return self.dijkstra(src, dest, power)
 
     def dijkstra(self, s, t, power):
         Vu = set()
         d = {s: 0}
-        prédecesseurs = {}
+        predecesseurs = {}
         suivants = [(0, s)]  # Â tas de couples (d[x],x)
         while suivants != []:
             dx, x = heappop(suivants)
@@ -104,43 +101,43 @@ class Graph:
                 if (y not in d or d[y] > dy) and power >= p:
                     d[y] = dy
                     heappush(suivants, (dy, y))
-                    prédecesseurs[y] = x
+                    predecesseurs[y] = x
         path = [t]
         if t not in d : return None
         x = t
         while x != s:
-            x = prédecesseurs[x]
+            x = predecesseurs[x]
             path.insert(0, x)
         return path
+
+    def dfs(self,node,visited_nodes):
+        """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
+        on crée un dictionnaire qui prend comme clé le noeud et qui ajoute en valeur seulement le noeud voisin
+        le noeud voisin est bien contenu dans values = (nodes2, power_min, dist) """
+        """liste de liste : on va faire un dict"""
+        component = [node]
+        voisins = [node]
+        visited_nodes[node] = True
+        while component != []:
+            node=component[0]
+            component=component[1:]
+            for neighbour in self.graph[node]:
+                neighbour=neighbour[0]
+                if not visited_nodes[neighbour]:
+                    visited_nodes[neighbour] = True
+                    component.append(neighbour)
+                    voisins.append(neighbour)
+        return voisins
 
     def connected_components(self):
         list_components = []
         visited_nodes = {noeud: False for noeud in self.nodes}
 
         """création d'un dictionnaire de noeuds avec false si non visité"""
-
-        def dfs(node):
-            """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
-            on crée un dictionnaire qui prend comme clé le noeud et qui ajoute en valeur seulement le noeud voisin
-            le noeud voisin est bien contenu dans values = (nodes2, power_min, dist) """
-            """liste de liste : on va faire un dict"""
-            component = [node]
-            for neighbour in self.graph[node]:
-                neighbour = neighbour[0]
-                # on ne retient que la première composante de la value pour avoir le voisin
-                if not visited_nodes[neighbour]:
-                    visited_nodes[neighbour] = True
-                    component += dfs(neighbour)
-            return component
-
         for noeud in self.nodes:
             if not visited_nodes[noeud]:
-                list_components.append(dfs(noeud))
-
+                list_components.append(dfs(self,noeud,visited_nodes))
         return list_components
-        print(list_components)
-
-    visited = set()
 
     def connected_components_set(self):
         return set(map(frozenset, self.connected_components()))
@@ -151,23 +148,23 @@ class Graph:
         Should return path, min_power.
         """
         p = 0
-        while self.get_path_with_power(src, dest, p) == None :
+        while type(self.get_path_with_power(src, dest, p)) == str :
             p += 1
         return self.get_path_with_power(src, dest, p), p
-    """on suppose ici que la puissance est toujours un entier naturel"""
+    #on suppose ici que la puissance est toujours un entier naturel
 
     def min_power2(self,src,dest):
-        p1=0
-        p2=0
+        pmin=0
+        pmax=0
         for nodes in self.graph:
             for voisins in self.graph[nodes]:
-                p2=max(p2,voisins[1])
-        while p1<p2:
-            p=(p1+p2)//2
-            if Graph.get_path_with_power(self,src,dest,p)==None:
-                p1=p
+                pmax=max(pmax,voisins[1])
+        while pmin<=pmax:
+            p=(pmin+pmax)//2
+            if type(Graph.get_path_with_power(self,src,dest,p))==str:
+                pmin=p
             else:
-                p2=p
+                pmax=p
         return Graph.get_path_with_power(self,src,dest,p)
 
     def graph_from_file(filename): 
@@ -244,15 +241,15 @@ class Graph:
                 Graph.union(pik,rank,edge[0],edge[1])
         return(X)
 
-    def power_min_ameliore(self,src,dest):
+    def min_power_ameliore(self,src,dest):
         list = self.connected_components()
         i = 0
         while i < len(list) and src not in list[i]:
             i += 1
         if i == len(list):
-            return None
+            return "source non présente"
         if dest not in list[i]:
-            return None
+            return "source et destination non connectées"
         X=Graph.kruskal(self)
         def power(self,node1,node2):
             voisins=self.graph[node1]
@@ -263,7 +260,7 @@ class Graph:
             return voisins[k][1]
         def dijkstra_unique(self, s, t):
             Vu = set()
-            prédecesseurs = {}
+            predecesseurs = {}
             suivants = [s]
             while suivants != []:
                 x = heappop(suivants)
@@ -275,13 +272,13 @@ class Graph:
                         continue
                     else:
                         heappush(suivants, y)
-                        prédecesseurs[y] = x
+                        predecesseurs[y] = x
             path = [t]
             x = t
             p_min=0
             while x != s:
-                p_min=max(p_min,power(self,x,prédecesseurs[x]))
-                x = prédecesseurs[x]
+                p_min=max(p_min,power(self,x,predecesseurs[x]))
+                x = predecesseurs[x]
                 path.insert(0, x)
             return path,p_min
         return dijkstra_unique(X, src, dest)
