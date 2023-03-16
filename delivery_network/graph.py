@@ -103,12 +103,12 @@ class Graph:
                     heappush(suivants, (dy, y))
                     predecesseurs[y] = x
         path = [t]
-        if t not in d : return None
+        if t not in d : return "pas de chemin possible avec cette puissance"
         x = t
         while x != s:
             x = predecesseurs[x]
             path.insert(0, x)
-        return path
+        return path, p
 
     def dfs(self,node,visited_nodes):
         """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
@@ -136,7 +136,7 @@ class Graph:
         """création d'un dictionnaire de noeuds avec false si non visité"""
         for noeud in self.nodes:
             if not visited_nodes[noeud]:
-                list_components.append(dfs(self,noeud,visited_nodes))
+                list_components.append(Graph.dfs(self,noeud,visited_nodes))
         return list_components
 
     def connected_components_set(self):
@@ -159,13 +159,13 @@ class Graph:
         for nodes in self.graph:
             for voisins in self.graph[nodes]:
                 pmax=max(pmax,voisins[1])
-        while pmin<=pmax:
+        while pmin+1<pmax:
             p=(pmin+pmax)//2
             if type(Graph.get_path_with_power(self,src,dest,p))==str:
                 pmin=p
             else:
                 pmax=p
-        return Graph.get_path_with_power(self,src,dest,p)
+        return pmax
 
     def graph_from_file(filename): 
         """

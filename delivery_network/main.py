@@ -1,7 +1,7 @@
 from graph import *
 
 data_path = "input/"
-file_name = "network.03.in"
+file_name = "network.04.in"
 
 g = Graph.graph_from_file(data_path + file_name)
 print(g)
@@ -34,6 +34,6 @@ def temps(f,k):
         print("ok")
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
     return nb_trajets*sum(temps)/len(temps)
-#temps(Graph.min_power_ameliore,9)
+temps(Graph.min_power2,2)
 #probleme pour routes plus grandes que 2 car dfs non recursif terminal, donc trop de profondeur de recursivité, à corriger!
 #update, c'est corrigé
