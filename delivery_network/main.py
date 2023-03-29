@@ -1,14 +1,15 @@
 from graph import *
 
 data_path = "input/"
-file_name = "network.04.in"
+file_name = "network.00.in"
 
 g = Graph.graph_from_file(data_path + file_name)
 print(g)
 print(Graph.min_power2(g, 1, 4))
 #g.representation(("test"))
 print(Graph.kruskal(g))
-print(Graph.min_power_ameliore(g, 1, 4))
+print(Graph.min_power_ameliore(g, 7, 2))
+print(Graph.min_power_ameliore2(g, 7, 2))
 
 
 def temps(f,k):
@@ -34,6 +35,6 @@ def temps(f,k):
         print("ok")
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
     return nb_trajets*sum(temps)/len(temps)
-temps(Graph.min_power2,2)
+temps(Graph.min_power_ameliore2,2)
 #probleme pour routes plus grandes que 2 car dfs non recursif terminal, donc trop de profondeur de recursivité, à corriger!
 #update, c'est corrigé

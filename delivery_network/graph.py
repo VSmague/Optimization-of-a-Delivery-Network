@@ -1,5 +1,6 @@
 from heapq import *
 from graphviz import Graph as gr
+import math
 
 class Graph:
     """
@@ -241,7 +242,7 @@ class Graph:
                 Graph.union(pik,rank,edge[0],edge[1])
         return(X)
 
-    def min_power_ameliore(self,src,dest):
+    def min_power_ameliore2(self,src,dest):
         list = self.connected_components()
         i = 0
         while i < len(list) and src not in list[i]:
@@ -297,3 +298,40 @@ class Graph:
         graphe.render(f"{nom}.dot")
         print(graphe)
         return()
+    
+    def opti(self,src,dest):
+        visited_nodes={noeud: False for noeud in self.nodes}
+        predecesseurs={}
+        component = [src]
+        predecesseurs[src]=[src,-1]
+        visited_nodes[src] = True
+        while component != []:
+            node=component[0]
+            component=component[1:]
+            for neighbour in self.graph[node]:
+                power=neighbour[1]
+                neighbour=neighbour[0]
+                if not visited_nodes[neighbour]:
+                    visited_nodes[neighbour] = True
+                    component.append(neighbour)
+                    predecesseurs[neighbour]=[node,power]
+        path=[]
+        power=-1
+        while src!=dest:
+            path.append(dest)
+            power=max([power,predecesseurs[dest][1]])
+            dest=predecesseurs[dest][0]
+        path.append(dest)
+        return list(reversed(path)),power
+
+    def min_power_ameliore(self,src,dest):
+        list = self.connected_components()
+        i = 0
+        while i < len(list) and src not in list[i]:
+            i += 1
+        if i == len(list):
+            return "source non présente"
+        if dest not in list[i]:
+            return "source et destination non connectées"
+        X=Graph.kruskal(self)
+        return Graph.opti(X, src, dest)
