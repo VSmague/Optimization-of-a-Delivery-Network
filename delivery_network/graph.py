@@ -243,15 +243,6 @@ class Graph:
         return(X)
 
     def min_power_ameliore2(self,src,dest):
-        list = self.connected_components()
-        i = 0
-        while i < len(list) and src not in list[i]:
-            i += 1
-        if i == len(list):
-            return "source non présente"
-        if dest not in list[i]:
-            return "source et destination non connectées"
-        X=Graph.kruskal(self)
         def power(self,node1,node2):
             voisins=self.graph[node1]
             n=len(voisins)
@@ -282,7 +273,7 @@ class Graph:
                 x = predecesseurs[x]
                 path.insert(0, x)
             return path,p_min
-        return dijkstra_unique(X, src, dest)
+        return dijkstra_unique(self, src, dest)
 
     def representation(self, nom):
         graphe = gr(format='png', engine="circo") 
@@ -298,8 +289,13 @@ class Graph:
         graphe.render(f"{nom}.dot")
         print(graphe)
         return()
-    
-    def opti(self,src,dest):
+
+    def pre_travail(self):
+        list = self.connected_components()
+        X=Graph.kruskal(self)
+        return X
+
+    def min_power_ameliore(self,src,dest):
         visited_nodes={noeud: False for noeud in self.nodes}
         predecesseurs={}
         component = [src]
@@ -323,15 +319,3 @@ class Graph:
             dest=predecesseurs[dest][0]
         path.append(dest)
         return list(reversed(path)),power
-
-    def min_power_ameliore(self,src,dest):
-        list = self.connected_components()
-        i = 0
-        while i < len(list) and src not in list[i]:
-            i += 1
-        if i == len(list):
-            return "source non présente"
-        if dest not in list[i]:
-            return "source et destination non connectées"
-        X=Graph.kruskal(self)
-        return Graph.opti(X, src, dest)

@@ -27,14 +27,23 @@ def temps(f,k):
     file.close()
     print(nb_trajets)
     h=Graph.graph_from_file("input/network."+str(k)+".in")
+    x=Graph.pre_travail(h)
     for src,dest in trajets:
         t_start=time.perf_counter()
-        f(h,src,dest)
+        f(x,src,dest)
         t_stop=time.perf_counter()
         temps.append(t_stop-t_start)
         print("ok")
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
     return nb_trajets*sum(temps)/len(temps)
-temps(Graph.min_power_ameliore2,2)
-#probleme pour routes plus grandes que 2 car dfs non recursif terminal, donc trop de profondeur de recursivité, à corriger!
-#update, c'est corrigé
+temps(Graph.min_power_ameliore2,5)
+
+def trucks(k):
+    file=open("input/trucks."+str(k)+".in","r")
+    l_trucks=[]
+    nb_truck=list(map(int,file.readline().split()))[0]
+    for i in range(nb_truck):
+        truck=list(map(int,file.readline().split()))
+        l_trucks.append(truck)
+    file.close()
+    return l_trucks
