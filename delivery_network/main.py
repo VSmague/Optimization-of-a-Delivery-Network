@@ -1,18 +1,15 @@
 from graph import *
 
 data_path = "input/"
-file_name = "network.00.in"
+file_name = "network.1.in"
 
 g = Graph.graph_from_file(data_path + file_name)
-print(g)
-print(Graph.min_power2(g, 1, 4))
 #g.representation(("test"))
-print(Graph.kruskal(g))
-print(Graph.min_power_ameliore(g, 7, 2))
-print(Graph.min_power_ameliore2(g, 7, 2))
+#print(Graph.min_power_ameliore2(g, 3, 18))
+#print(Graph.min_power_ameliore(Graph.pre_travail(g), 3, 18))
 
 
-def temps(f,k):
+def temps_10(f,k):
     import time
     trajets=[]
     temps=[]
@@ -25,18 +22,31 @@ def temps(f,k):
             node1, node2, gain = edge
             trajets.append((node1,node2))
     file.close()
-    print(nb_trajets)
+    solution=[]
     h=Graph.graph_from_file("input/network."+str(k)+".in")
-    x=Graph.pre_travail(h)
     for src,dest in trajets:
         t_start=time.perf_counter()
-        f(x,src,dest)
+        solution.append(f(h,src,dest))
         t_stop=time.perf_counter()
         temps.append(t_stop-t_start)
-        print("ok")
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
-    return nb_trajets*sum(temps)/len(temps)
-temps(Graph.min_power_ameliore2,5)
+    return solution
+
+def temps_15(f,k):
+    import time
+    solution=[]
+    file=open("input/routes."+str(k)+".in", "r")
+    nb_trajets=list(map(int, file.readline().split()))[0]
+    h=Graph.graph_from_file("input/network."+str(k)+".in")
+    x=Graph.pre_travail(h)
+    t_start=time.perf_counter()
+    for i in range(nb_trajets):
+        src,dest,gain = list(map(int, file.readline().split()))
+        solution.append(f(x,src,dest))
+    t_stop=time.perf_counter()
+    file.close()
+    print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",t_stop-t_start)
+    return solution
 
 def trucks(k):
     file=open("input/trucks."+str(k)+".in","r")

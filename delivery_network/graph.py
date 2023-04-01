@@ -109,7 +109,7 @@ class Graph:
         while x != s:
             x = predecesseurs[x]
             path.insert(0, x)
-        return path, p
+        return path
 
     def dfs(self,node,visited_nodes):
         """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
@@ -243,6 +243,8 @@ class Graph:
         return(X)
 
     def min_power_ameliore2(self,src,dest):
+        list = self.connected_components()
+        X=Graph.kruskal(self)
         def power(self,node1,node2):
             voisins=self.graph[node1]
             n=len(voisins)
@@ -273,7 +275,7 @@ class Graph:
                 x = predecesseurs[x]
                 path.insert(0, x)
             return path,p_min
-        return dijkstra_unique(self, src, dest)
+        return dijkstra_unique(X, src, dest)
 
     def representation(self, nom):
         graphe = gr(format='png', engine="circo") 
@@ -293,29 +295,48 @@ class Graph:
     def pre_travail(self):
         list = self.connected_components()
         X=Graph.kruskal(self)
-        return X
-
-    def min_power_ameliore(self,src,dest):
-        visited_nodes={noeud: False for noeud in self.nodes}
+        visited_nodes={noeud: False for noeud in X.nodes}
         predecesseurs={}
-        component = [src]
-        predecesseurs[src]=[src,-1]
-        visited_nodes[src] = True
+        node_initial=X.nodes[0]
+        for noeud in X.nodes:
+            if len(X.graph[noeud])>len(X.graph[node_initial]):
+                node_initial=noeud
+        component = [node_initial]
+        predecesseurs[node_initial]=[node_initial,-1,0]
+        visited_nodes[node_initial] = True
         while component != []:
             node=component[0]
             component=component[1:]
-            for neighbour in self.graph[node]:
+            for neighbour in X.graph[node]:
                 power=neighbour[1]
                 neighbour=neighbour[0]
                 if not visited_nodes[neighbour]:
                     visited_nodes[neighbour] = True
                     component.append(neighbour)
-                    predecesseurs[neighbour]=[node,power]
-        path=[]
+                    predecesseurs[neighbour]=[node,power,predecesseurs[node][2]+1]
+        return predecesseurs
+
+    def min_power_ameliore(predecesseurs,src,dest):
+        path_b=[]
+        path_e=[]
         power=-1
+        profondeur_min=min([predecesseurs[src][2],predecesseurs[dest][2]])
+        profondeur_max=max([predecesseurs[src][2],predecesseurs[dest][2]])
+        while profondeur_max!=profondeur_min:
+            if profondeur_max==predecesseurs[src][2]:
+                path_b.append(src)
+                power=max([power,predecesseurs[src][1]])
+                src=predecesseurs[src][0]
+            else:
+                path_e.insert(0,dest)
+                power=max([power,predecesseurs[dest][1]])
+                dest=predecesseurs[dest][0]
+            profondeur_max-=1
         while src!=dest:
-            path.append(dest)
-            power=max([power,predecesseurs[dest][1]])
+            path_b.append(src)
+            path_e.insert(0,dest)
+            power=max([power,predecesseurs[src][1],predecesseurs[dest][1]])
+            src=predecesseurs[src][0]
             dest=predecesseurs[dest][0]
-        path.append(dest)
-        return list(reversed(path)),power
+        path=path_b+[src]+path_e
+        return path,power
