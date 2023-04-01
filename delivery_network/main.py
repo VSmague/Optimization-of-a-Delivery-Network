@@ -39,16 +39,16 @@ def temps_15(f,k):
     nb_trajets=list(map(int, file.readline().split()))[0]
     h=Graph.graph_from_file("input/network."+str(k)+".in")
     x=Graph.pre_travail(h)
-    fichier=open("output/routes."+str(k)+".out","a")
+    #fichier=open("output/routes."+str(k)+".out","a")
     t_start=time.perf_counter()
     for i in range(nb_trajets):
         src,dest,gain = list(map(int, file.readline().split()))
         path,power=f(x,src,dest)
-        fichier.write(str(power)+"\n")
+        #fichier.write(str(power)+"\n")
         solution.append((path,power))
     t_stop=time.perf_counter()
     file.close()
-    fichier.close()
+    #fichier.close()
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",t_stop-t_start)
     return solution
 
@@ -62,5 +62,22 @@ def trucks(k):
     file.close()
     return l_trucks
 
-for k in range(1,10):
-   temps_15(Graph.min_power_ameliore,k)
+def glouton(k,W):
+    file_trajet=open("input/routes."+str(k)+".in", "r")
+    file_puissance=open("output/routes."+str(k)+".out","r")
+    nb_trajet=list(map(int, file_trajet.readline().split()))[0]
+    efficacite=[]
+    for i in range(nb_trajet):
+        src,dest,gain=list(map(int, file_trajet.readline().split()))
+        power=list(map(int, file_puissance.readline().split()))[0]
+        efficacite.append(gain/power,power,gain,i+1)
+    efficacite.sort(key= lambda x:x[0])
+    w_dep=0
+    i=0
+    while w_dep<W:
+    
+
+
+
+#for k in range(1,10):
+#  temps_15(Graph.min_power_ameliore,k)
