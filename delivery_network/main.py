@@ -39,12 +39,16 @@ def temps_15(f,k):
     nb_trajets=list(map(int, file.readline().split()))[0]
     h=Graph.graph_from_file("input/network."+str(k)+".in")
     x=Graph.pre_travail(h)
+    fichier=open("routes."+str(k)+".out","a")
     t_start=time.perf_counter()
     for i in range(nb_trajets):
         src,dest,gain = list(map(int, file.readline().split()))
-        solution.append(f(x,src,dest))
+        path,power=f(x,src,dest)
+        fichier.write("\n"+str(power))
+        solution.append((path,power))
     t_stop=time.perf_counter()
     file.close()
+    fichier.close()
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",t_stop-t_start)
     return solution
 
@@ -57,3 +61,5 @@ def trucks(k):
         l_trucks.append(truck)
     file.close()
     return l_trucks
+
+temps_15(Graph.min_power_ameliore,1)
