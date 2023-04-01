@@ -302,7 +302,7 @@ class Graph:
             if len(X.graph[noeud])>len(X.graph[node_initial]):
                 node_initial=noeud
         component = [node_initial]
-        predecesseurs[node_initial]=[node_initial,-1,0]
+        predecesseurs[node_initial]=[node_initial,0,0]
         visited_nodes[node_initial] = True
         while component != []:
             node=component[0]

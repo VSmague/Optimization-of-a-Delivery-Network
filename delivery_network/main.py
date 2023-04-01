@@ -3,7 +3,7 @@ from graph import *
 data_path = "input/"
 file_name = "network.1.in"
 
-g = Graph.graph_from_file(data_path + file_name)
+#g = Graph.graph_from_file(data_path + file_name)
 #g.representation(("test"))
 #print(Graph.min_power_ameliore2(g, 3, 18))
 #print(Graph.min_power_ameliore(Graph.pre_travail(g), 3, 18))
@@ -39,12 +39,12 @@ def temps_15(f,k):
     nb_trajets=list(map(int, file.readline().split()))[0]
     h=Graph.graph_from_file("input/network."+str(k)+".in")
     x=Graph.pre_travail(h)
-    fichier=open("routes."+str(k)+".out","a")
+    fichier=open("output/routes."+str(k)+".out","a")
     t_start=time.perf_counter()
     for i in range(nb_trajets):
         src,dest,gain = list(map(int, file.readline().split()))
         path,power=f(x,src,dest)
-        fichier.write("\n"+str(power))
+        fichier.write(str(power)+"\n")
         solution.append((path,power))
     t_stop=time.perf_counter()
     file.close()
@@ -62,4 +62,5 @@ def trucks(k):
     file.close()
     return l_trucks
 
-temps_15(Graph.min_power_ameliore,1)
+for k in range(1,10):
+   temps_15(Graph.min_power_ameliore,k)
