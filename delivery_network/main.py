@@ -73,9 +73,28 @@ def glouton(k,W):
         efficacite.append(gain/power,power,gain,i+1)
     efficacite.sort(key= lambda x:x[0])
     w_dep=0
+    gain_tot=0
+    l_trucks=trucks(k)
+    bon_camion=[]
+    for trajet in efficacite:
+        puissance=trajet[1]
+        indice_truck=-1
+        cout_truck=trajet[2]
+        for j in range(len(l_trucks)):
+            if l_trucks[j][0]<puissance:
+                continue
+            else:
+                if l_trucks[j][1]<cout_truck:
+                    indice_truck=j
+                    cout_truck=l_trucks[j][1]
+        bon_camion.append((indice_truck,cout_truck))
     i=0
-    while w_dep<W:
-    
+    camion_et_trajet={trajet[3]: [] for trajet in efficacite}
+    while w_dep+bon_camion[i][1]<W:
+        camion_et_trajet[efficacite[i][3]].append(bon_camion[i][0])
+        gain_tot+=efficacite[i][2]
+        w_dep+=bon_camion[i][1]
+    return gain_tot,camion_et_trajet
 
 
 
