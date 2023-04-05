@@ -319,7 +319,7 @@ class Graph:
     def min_power_ameliore(predecesseurs,src,dest):
         path_b=[]
         path_e=[]
-        power=-1
+        power=0
         profondeur_min=min([predecesseurs[src][2],predecesseurs[dest][2]])
         profondeur_max=max([predecesseurs[src][2],predecesseurs[dest][2]])
         while profondeur_max!=profondeur_min:

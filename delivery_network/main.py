@@ -62,40 +62,46 @@ def trucks(k):
     file.close()
     return l_trucks
 
-def glouton(k,W):
-    file_trajet=open("input/routes."+str(k)+".in", "r")
-    file_puissance=open("output/routes."+str(k)+".out","r")
+def glouton(k_routes,k_camions,W):
+    file_trajet=open("input/routes."+str(k_routes)+".in", "r")
+    file_puissance=open("output/routes."+str(k_routes)+".out","r")
     nb_trajet=list(map(int, file_trajet.readline().split()))[0]
     efficacite=[]
     for i in range(nb_trajet):
         src,dest,gain=list(map(int, file_trajet.readline().split()))
         power=list(map(int, file_puissance.readline().split()))[0]
-        efficacite.append(gain/power,power,gain,i+1)
+        efficacite.append([gain/(power+0.1),power,gain,i+1])
     efficacite.sort(key= lambda x:x[0])
     w_dep=0
     gain_tot=0
-    l_trucks=trucks(k)
+    l_trucks=trucks(k_camions)
     bon_camion=[]
     for trajet in efficacite:
         puissance=trajet[1]
         indice_truck=-1
         cout_truck=trajet[2]
+        premier=True
         for j in range(len(l_trucks)):
             if l_trucks[j][0]<puissance:
                 continue
             else:
-                if l_trucks[j][1]<cout_truck:
+                if premier or l_trucks[j][1]<cout_truck:
+                    premier=False
                     indice_truck=j
                     cout_truck=l_trucks[j][1]
-        bon_camion.append((indice_truck,cout_truck))
+        bon_camion.append([indice_truck,cout_truck])
     i=0
-    camion_et_trajet={trajet[3]: [] for trajet in efficacite}
+    camion_et_trajet={trajet[3]: {} for trajet in efficacite}
     while w_dep+bon_camion[i][1]<W:
-        camion_et_trajet[efficacite[i][3]].append(bon_camion[i][0])
+        if bon_camion[i][0] not in camion_et_trajet[efficacite[i][3]].keys():
+            camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]=1
+        else:
+            camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]+=1
         gain_tot+=efficacite[i][2]
         w_dep+=bon_camion[i][1]
     return gain_tot,camion_et_trajet
 
+print(glouton(1,1,25000000000))
 
 
 #for k in range(1,10):
