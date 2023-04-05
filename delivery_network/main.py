@@ -92,16 +92,17 @@ def glouton(k_routes,k_camions,W):
         bon_camion.append([indice_truck,cout_truck])
     i=0
     camion_et_trajet={trajet[3]: {} for trajet in efficacite}
-    while w_dep+bon_camion[i][1]<W:
+    while len(bon_camion)>i and w_dep+bon_camion[i][1]<W:
         if bon_camion[i][0] not in camion_et_trajet[efficacite[i][3]].keys():
             camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]=1
         else:
             camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]+=1
         gain_tot+=efficacite[i][2]
         w_dep+=bon_camion[i][1]
+        i+=1
     return gain_tot,camion_et_trajet
 
-print(glouton(1,1,25000000000))
+print(glouton(1,0,25000000000))
 
 
 #for k in range(1,10):
