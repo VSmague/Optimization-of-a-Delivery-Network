@@ -9,7 +9,7 @@ file_name = "network.1.in"
 #print(Graph.min_power_ameliore(Graph.pre_travail(g), 3, 18))
 
 
-def temps_10(f,k):
+def temps_10(f,k): #question 10
     import time
     trajets=[]
     temps=[]
@@ -32,7 +32,7 @@ def temps_10(f,k):
     print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
     return solution
 
-def temps_15(f,k):
+def temps_15(f,k): #question 15
     import time
     solution=[]
     file=open("input/routes."+str(k)+".in", "r")
