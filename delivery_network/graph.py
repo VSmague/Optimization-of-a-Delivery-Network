@@ -1,5 +1,40 @@
 from graphviz import Graph as gr
 
+def graph_from_file(filename): #questions 1 et 4
+    """
+    Reads a text file and returns the graph as an object of the Graph class.
+
+    The file should have the following format: 
+        The first line of the file is 'n m'
+        The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
+        The nodes (node1, node2) should be named 1..n
+        All values are integers.
+
+    Parameters: 
+    -----------
+    filename: str
+        The name of the file
+
+    Outputs: 
+    -----------
+    g: Graph
+        An object of the class Graph with the graph from file_name.
+    """
+    with open(filename, "r") as file:
+        n, m = map(int, file.readline().split())
+        g = Graph(range(1, n+1))
+        for _ in range(m):
+            edge = list(map(int, file.readline().split()))
+            if len(edge) == 3:
+                node1, node2, power_min = edge
+                g.add_edge(node1, node2, power_min) # will add dist=1 by default
+            elif len(edge) == 4:
+                node1, node2, power_min, dist = edge
+                g.add_edge(node1, node2, power_min, dist)
+            else:
+                raise Exception("Format incorrect")
+    return g
+
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -69,41 +104,6 @@ class Graph:
         self.graph[node1].append((node2, power_min, dist))
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
-
-    def graph_from_file(filename): #questions 1 et 4
-        """
-        Reads a text file and returns the graph as an object of the Graph class.
-
-        The file should have the following format: 
-            The first line of the file is 'n m'
-            The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
-            The nodes (node1, node2) should be named 1..n
-            All values are integers.
-
-        Parameters: 
-        -----------
-        filename: str
-            The name of the file
-
-        Outputs: 
-        -----------
-        g: Graph
-            An object of the class Graph with the graph from file_name.
-        """
-        with open(filename, "r") as file:
-            n, m = map(int, file.readline().split())
-            g = Graph(range(1, n+1))
-            for _ in range(m):
-                edge = list(map(int, file.readline().split()))
-                if len(edge) == 3:
-                    node1, node2, power_min = edge
-                    g.add_edge(node1, node2, power_min) # will add dist=1 by default
-                elif len(edge) == 4:
-                    node1, node2, power_min, dist = edge
-                    g.add_edge(node1, node2, power_min, dist)
-                else:
-                    raise Exception("Format incorrect")
-        return g
     
     def dfs(self,node,visited_nodes): #question 2
         """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
@@ -156,6 +156,7 @@ class Graph:
         suivants = [(0, s)]  # Â tas de couples (d[x],x)
         while suivants != []:
             dx, x = suivants[0]
+            suivants=suivants[1:]
             if x in Vu:
                 continue
             Vu.add(x)
@@ -197,7 +198,7 @@ class Graph:
                 pmin=p
             else:
                 pmax=p
-        return pmax
+        return Graph.get_path_with_power(self,src,dest,pmax),pmax
     
     def representation(self, nom): #question 7 : représentation visuelle des graphes
         graphe = gr(format='png', engine="circo") 
@@ -214,6 +215,29 @@ class Graph:
         print(graphe)
         return()
     
+    def temps_10(f,k): #question 10
+        import time
+        trajets=[]
+        temps=[]
+        file=open("input/routes."+str(k)+".in", "r")
+        for i in range(10):
+            edge = list(map(int, file.readline().split()))
+            if len(edge)==1:
+                nb_trajets=edge[0]
+            else:
+                node1, node2, gain = edge
+                trajets.append((node1,node2))
+        file.close()
+        solution=[]
+        h=Graph.graph_from_file("input/network."+str(k)+".in")
+        for src,dest in trajets:
+            t_start=time.perf_counter()
+            solution.append(f(h,src,dest))
+            t_stop=time.perf_counter()
+            temps.append(t_stop-t_start)
+        print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
+        return solution
+
     def makeset(pik,rank,node): #pour implémenter Kruskal : question 12
         pik[node]=node
         rank[node]=0
@@ -301,3 +325,73 @@ class Graph:
             dest=predecesseurs[dest][0]
         path=path_b+[src]+path_e
         return path,power
+    
+    def temps_15(f,k): #question 15
+        import time
+        solution=[]
+        file=open("input/routes."+str(k)+".in", "r")
+        nb_trajets=list(map(int, file.readline().split()))[0]
+        h=Graph.graph_from_file("input/network."+str(k)+".in")
+        x=Graph.pre_travail(h)
+        #fichier=open("output/routes."+str(k)+".out","a")
+        t_start=time.perf_counter()
+        for i in range(nb_trajets):
+            src,dest,gain = list(map(int, file.readline().split()))
+            path,power=f(x,src,dest)
+            #fichier.write(str(power)+"\n")
+            solution.append((path,power))
+        t_stop=time.perf_counter()
+        file.close()
+        #fichier.close()
+        print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",t_stop-t_start)
+        return solution
+
+    def trucks(k):
+        file=open("input/trucks."+str(k)+".in","r")
+        l_trucks=[]
+        nb_truck=list(map(int,file.readline().split()))[0]
+        for i in range(nb_truck):
+            truck=list(map(int,file.readline().split()))
+            l_trucks.append(truck)
+        file.close()
+        return l_trucks
+    
+    def glouton(k_routes,k_camions,W):
+        file_trajet=open("input/routes."+str(k_routes)+".in", "r")
+        file_puissance=open("output/routes."+str(k_routes)+".out","r")
+        nb_trajet=list(map(int, file_trajet.readline().split()))[0]
+        efficacite=[]
+        for i in range(nb_trajet):
+            src,dest,gain=list(map(int, file_trajet.readline().split()))
+            power=list(map(int, file_puissance.readline().split()))[0]
+            efficacite.append([gain/(power+0.1),power,gain,i+1])
+        efficacite.sort(key= lambda x:x[0])
+        w_dep=0
+        gain_tot=0
+        l_trucks=Graph.trucks(k_camions)
+        bon_camion=[]
+        for trajet in efficacite:
+            puissance=trajet[1]
+            indice_truck=-1
+            cout_truck=trajet[2]
+            premier=True
+            for j in range(len(l_trucks)):
+                if l_trucks[j][0]<puissance:
+                    continue
+                else:
+                    if premier or l_trucks[j][1]<cout_truck:
+                        premier=False
+                        indice_truck=j
+                        cout_truck=l_trucks[j][1]
+            bon_camion.append([indice_truck,cout_truck])
+        i=0
+        camion_et_trajet={trajet[3]: {} for trajet in efficacite}
+        while len(bon_camion)>i and w_dep+bon_camion[i][1]<W:
+            if bon_camion[i][0] not in camion_et_trajet[efficacite[i][3]].keys():
+                camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]=1
+            else:
+                camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]+=1
+            gain_tot+=efficacite[i][2]
+            w_dep+=bon_camion[i][1]
+            i+=1
+        return gain_tot,camion_et_trajet
