@@ -44,7 +44,7 @@ class Graph:
                 output += f"{source}-->{destination}\n"
         return output
     
-    def add_edge(self, node1, node2, power_min, dist=1):
+    def add_edge(self, node1, node2, power_min, dist=1): #question 1
         """
         Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes. 
 
@@ -74,7 +74,7 @@ class Graph:
         #parcours en largeur : utiliser pour le plus court chemin BFS
         #parcous en profondeur : utiliser pour une recherche de chemin DFS=
 
-    def get_path_with_power(self, src, dest, power):
+    def get_path_with_power(self, src, dest, power): #questions 3 et 5
         list = self.connected_components()
         i = 0
         while i < len(list) and src not in list[i]:
@@ -85,7 +85,7 @@ class Graph:
             return "source et destination non connectées"
         return self.dijkstra(src, dest, power)
 
-    def dijkstra(self, s, t, power):
+    def dijkstra(self, s, t, power): #dijkstra pour question 3
         Vu = set()
         d = {s: 0}
         predecesseurs = {}
@@ -111,7 +111,7 @@ class Graph:
             path.insert(0, x)
         return path
 
-    def dfs(self,node,visited_nodes):
+    def dfs(self,node,visited_nodes): #question 2
         """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
         on crée un dictionnaire qui prend comme clé le noeud et qui ajoute en valeur seulement le noeud voisin
         le noeud voisin est bien contenu dans values = (nodes2, power_min, dist) """
@@ -130,7 +130,7 @@ class Graph:
                     voisins.append(neighbour)
         return voisins
 
-    def connected_components(self):
+    def connected_components(self): #question 2
         list_components = []
         visited_nodes = {noeud: False for noeud in self.nodes}
 
@@ -140,7 +140,7 @@ class Graph:
                 list_components.append(Graph.dfs(self,noeud,visited_nodes))
         return list_components
 
-    def connected_components_set(self):
+    def connected_components_set(self): #question 2
         return set(map(frozenset, self.connected_components()))
         print(set(map(frozenset, self.connected_components())))
 
@@ -154,7 +154,7 @@ class Graph:
         return self.get_path_with_power(src, dest, p), p
     #on suppose ici que la puissance est toujours un entier naturel
 
-    def min_power2(self,src,dest):
+    def min_power2(self,src,dest): #question 6 : recherche dichotomique de puissance minimale
         pmin=0
         pmax=0
         for nodes in self.graph:
@@ -168,7 +168,7 @@ class Graph:
                 pmax=p
         return pmax
 
-    def graph_from_file(filename): 
+    def graph_from_file(filename): #questions 1 et 4
         """
         Reads a text file and returns the graph as an object of the Graph class.
 
