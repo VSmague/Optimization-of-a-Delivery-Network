@@ -277,11 +277,11 @@ class Graph:
             return path,p_min
         return dijkstra_unique(X, src, dest)
 
-    def representation(self, nom):
+    def representation(self, nom): #question 7 : représentation visuelle des graphes
         graphe = gr(format='png', engine="circo") 
         key=self.graph.keys()
         sauv=[]
-        for i in key: # on créer tous les sommets
+        for i in key: # on crée tous les sommets
             print(i)
             graphe.node(f"{i}",f"{i}")
             for voisin in self.graph[i]:
