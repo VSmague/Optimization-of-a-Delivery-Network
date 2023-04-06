@@ -366,6 +366,7 @@ class Graph:
             power=list(map(int, file_puissance.readline().split()))[0]
             efficacite.append([gain/(power+0.1),power,gain,i+1])
         efficacite.sort(key= lambda x:x[0])
+        efficacite.reverse()
         w_dep=0
         gain_tot=0
         l_trucks=Graph.trucks(k_camions)
