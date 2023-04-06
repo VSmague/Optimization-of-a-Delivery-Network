@@ -229,7 +229,7 @@ class Graph:
                 trajets.append((node1,node2))
         file.close()
         solution=[]
-        h=Graph.graph_from_file("input/network."+str(k)+".in")
+        h=graph_from_file("input/network."+str(k)+".in")
         for src,dest in trajets:
             t_start=time.perf_counter()
             solution.append(f(h,src,dest))
@@ -331,7 +331,7 @@ class Graph:
         solution=[]
         file=open("input/routes."+str(k)+".in", "r")
         nb_trajets=list(map(int, file.readline().split()))[0]
-        h=Graph.graph_from_file("input/network."+str(k)+".in")
+        h=graph_from_file("input/network."+str(k)+".in")
         x=Graph.pre_travail(h)
         #fichier=open("output/routes."+str(k)+".out","a")
         t_start=time.perf_counter()
