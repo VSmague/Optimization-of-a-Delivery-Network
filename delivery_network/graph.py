@@ -1,4 +1,3 @@
-from heapq import *
 from graphviz import Graph as gr
 
 class Graph:
@@ -156,7 +155,7 @@ class Graph:
         predecesseurs = {}
         suivants = [(0, s)]  # Â tas de couples (d[x],x)
         while suivants != []:
-            dx, x = heappop(suivants)
+            dx, x = suivants[0]
             if x in Vu:
                 continue
             Vu.add(x)
@@ -166,7 +165,7 @@ class Graph:
                 dy = dx + w
                 if (y not in d or d[y] > dy) and power >= p:
                     d[y] = dy
-                    heappush(suivants, (dy, y))
+                    suivants.append((dy, y))
                     predecesseurs[y] = x
         path = [t]
         if t not in d : return "pas de chemin possible avec cette puissance"
