@@ -203,17 +203,17 @@ class Graph:
                     raise Exception("Format incorrect")
         return g
 
-    def makeset(pik,rank,node):
+    def makeset(pik,rank,node): #pour implémenter Kruskal : question 12
         pik[node]=node
         rank[node]=0
         return None
 
-    def find(pik,node):
+    def find(pik,node): #pour implémenter Kruskal : question 12
         if pik[node] != node:
             pik[node]= Graph.find(pik,pik[node])
         return pik[node]
 
-    def union(pik,rank,node1,node2):
+    def union(pik,rank,node1,node2): #pour implémenter Kruskal : question 12
         r1=Graph.find(pik,node1)
         r2=Graph.find(pik,node2)
         if r1==r2: return None
@@ -225,7 +225,7 @@ class Graph:
                 rank[r2]+=1
         return None
 
-    def kruskal(self):
+    def kruskal(self): #question 12
         pik={}
         rank={}
         for node in self.nodes:
@@ -242,7 +242,7 @@ class Graph:
                 Graph.union(pik,rank,edge[0],edge[1])
         return(X)
 
-    def min_power_ameliore2(self,src,dest):
+    def min_power_ameliore2(self,src,dest): #question 14
         list = self.connected_components()
         X=Graph.kruskal(self)
         def power(self,node1,node2):
@@ -292,7 +292,7 @@ class Graph:
         print(graphe)
         return()
 
-    def pre_travail(self):
+    def pre_travail(self): #pour implémenter la question 14
         list = self.connected_components()
         X=Graph.kruskal(self)
         visited_nodes={noeud: False for noeud in X.nodes}
@@ -316,7 +316,7 @@ class Graph:
                     predecesseurs[neighbour]=[node,power,predecesseurs[node][2]+1]
         return predecesseurs
 
-    def min_power_ameliore(predecesseurs,src,dest):
+    def min_power_ameliore(predecesseurs,src,dest): #question 14
         path_b=[]
         path_e=[]
         power=0
