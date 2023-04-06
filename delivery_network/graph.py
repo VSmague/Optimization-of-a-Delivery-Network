@@ -385,12 +385,9 @@ class Graph:
                         cout_truck=l_trucks[j][1]
             bon_camion.append([indice_truck,cout_truck])
         i=0
-        camion_et_trajet={trajet[3]: {} for trajet in efficacite}
+        camion_et_trajet={camion[0]: [] for camion in bon_camion}
         while len(bon_camion)>i and w_dep+bon_camion[i][1]<W:
-            if bon_camion[i][0] not in camion_et_trajet[efficacite[i][3]].keys():
-                camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]=1
-            else:
-                camion_et_trajet[efficacite[i][3]][bon_camion[i][0]]+=1
+            camion_et_trajet[bon_camion[i][0]].append(efficacite[i][3])
             gain_tot+=efficacite[i][2]
             w_dep+=bon_camion[i][1]
             i+=1

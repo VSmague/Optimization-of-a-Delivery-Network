@@ -6,3 +6,5 @@ from graph import *
 #print(Graph.min_power(g, 2, 4))
 #for k in range(1,10):
 #    Graph.temps_15(Graph.min_power_ameliore, k)
+#w=25000000000
+#print(Graph.glouton(1,0,w))
