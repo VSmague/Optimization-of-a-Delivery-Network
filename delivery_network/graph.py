@@ -4,18 +4,18 @@ def graph_from_file(filename): #questions 1 et 4
     """
     Reads a text file and returns the graph as an object of the Graph class.
 
-    The file should have the following format: 
+    The file should have the following format:
         The first line of the file is 'n m'
         The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
         The nodes (node1, node2) should be named 1..n
         All values are integers.
 
-    Parameters: 
+    Parameters:
     -----------
     filename: str
         The name of the file
 
-    Outputs: 
+    Outputs:
     -----------
     g: Graph
         An object of the class Graph with the graph from file_name.
@@ -38,7 +38,7 @@ def graph_from_file(filename): #questions 1 et 4
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
-    Attributes: 
+    Attributes:
     -----------
     nodes: NodeType
         A list of nodes. Nodes can be of any immutable type, e.g., integer, float, or string.
@@ -50,7 +50,7 @@ class Graph:
     nb_nodes: int
         The number of nodes.
     nb_edges: int
-        The number of edges. 
+        The number of edges.
     """
 
     def __init__(self, nodes=[]):
@@ -68,7 +68,9 @@ class Graph:
     
 
     def __str__(self):
-        """Prints the graph as a list of neighbors for each node (one per line)"""
+        """
+        Prints the graph as a list of neighbors for each node (one per line)
+        """
         if not self.graph:
             output = "The graph is empty"            
         else:
@@ -79,9 +81,9 @@ class Graph:
     
     def add_edge(self, node1, node2, power_min, dist=1): #question 1
         """
-        Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes. 
+        Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes
 
-        Parameters: 
+        Parameters:
         -----------
         node1: NodeType
             First end (node) of the edge
@@ -105,19 +107,25 @@ class Graph:
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
     
-    def dfs(self,node,visited_nodes): #question 2
-        """ connected_graph = {}for key, values in self.graph.items(): connected_graph[key]=[values[0]]
-        on crée un dictionnaire qui prend comme clé le noeud et qui ajoute en valeur seulement le noeud voisin
-        le noeud voisin est bien contenu dans values = (nodes2, power_min, dist) """
-        """liste de liste : on va faire un dict"""
+    def dfs(self, node, visited_nodes): #question 2
+        """
+        Do a depht-first search to get the neighbour of a node
+
+        Parameters:
+        -----------
+        node: NodeType
+            Node of interest, starting point of the dfs
+        visited_nodes: set
+            For each node, says whether it has already been visited during the dfs or not
+        """
         component = [node]
         voisins = [node]
         visited_nodes[node] = True
         while component != []:
-            node=component[0]
-            component=component[1:]
+            node = component[0]
+            component = component[1:]
             for neighbour in self.graph[node]:
-                neighbour=neighbour[0]
+                neighbour = neighbour[0]
                 if not visited_nodes[neighbour]:
                     visited_nodes[neighbour] = True
                     component.append(neighbour)
@@ -125,13 +133,14 @@ class Graph:
         return voisins
 
     def connected_components(self): #question 2
+        """
+        Creation of a list containing all the differents connected components of the graph, using a dfs.
+        """
         list_components = []
         visited_nodes = {noeud: False for noeud in self.nodes}
-
-        """création d'un dictionnaire de noeuds avec false si non visité"""
         for noeud in self.nodes:
             if not visited_nodes[noeud]:
-                list_components.append(Graph.dfs(self,noeud,visited_nodes))
+                list_components.append(self.dfs(noeud, visited_nodes))
         return list_components
 
     def connected_components_set(self): #question 2
@@ -139,13 +148,27 @@ class Graph:
         print(set(map(frozenset, self.connected_components())))
     
     def get_path_with_power(self, src, dest, power): #questions 3 et 5
-        list = self.connected_components()
+        """_summary_
+
+        Parameters:
+        -----------
+            src: NodeType
+                source
+            dest: Node Type
+                destination
+            power: numeric (int or float)
+
+        Returns:
+            _type_: _description_
+        """
+        lst = self.connected_components()
+        n = len(lst)
         i = 0
-        while i < len(list) and src not in list[i]:
+        while i < n and src not in lst[i]:
             i += 1
-        if i == len(list): 
+        if i == n:
             return "pas de source"
-        if dest not in list[i]:
+        if dest not in lst[i]:
             return "source et destination non connectées"
         return self.chemin(src, dest, power)
 
