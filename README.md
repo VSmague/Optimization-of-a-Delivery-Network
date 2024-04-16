@@ -2,6 +2,18 @@
 
 # ENSAE 1A : programming project
 
+Through this programming project, we focus on optimizing a transportation network. The problem statement is as follows: consider a road network consisting of cities and routes between the cities. The objective of the project is to construct a delivery network capable of covering a set of routes between two cities with trucks. The difficulty lies in the fact that each route has a minimum power requirement, meaning a truck can only use this route if its power is greater than or equal to the route's minimum power requirement. Therefore, we need to determine for each pair of cities if a truck with a given power can find a possible path between these two cities; then, optimize the fleet of trucks to be purchased based on the routes to be covered.
+
+The road network is represented by an undirected graph G = (V, E). The set of vertices V corresponds to the set of cities. The set of edges E corresponds to the set of existing routes between two cities.
+
+We consider a set T of routes, where each route t is a pair of two distinct cities, i.e., t = (v, v0) where v ∈ V, v0 ∈ V. The set T represents the set of city pairs (v, v0) for which we want to have a truck that can transport between v and v0. Note that the graph is undirected and we do not distinguish the direction of the route. Each route t is also associated with a profit (or utility) ut ≥ 0, which will be earned by the delivery company if route t is covered.
+
+Finally, the transportation is done by trucks. Each truck (denoted as K) has a power p and costs a price c. Transport on a route t = (v, v0) in T will be possible if and only if we can find in the graph G a path from v to v0 where the minimum power of each edge is less than or equal to p (i.e., the truck has sufficient power to pass everywhere on the path). It is then said that route t can be covered by the truck K considered.
+
+To best address the problem, which is to maximize a company's profit based on the profit brought by each route and the cost of each truck depending on its power, we proceeded in two main parts: the implementation of algorithms to find the minimum power to travel a route; and the optimization of truck acquisition based on a list of routes associated with a profit.
+
+## Organization of the repositery
+
 This repository contains several folders and files:
 - The delivery_network folder contains the main code. This is where the Graph class is located.
 - The inputs folder contains datasets (graphs and sets of routes).
@@ -22,6 +34,18 @@ The structure of the routes.x.in files is as follows:
 - The following T lines each contain a route in the form 'city1 city2 utility', where utility is the profit gained if the corresponding route is covered.
 
 # ENSAE 1A : projet de programmation
+
+À travers ce projet de programmation, nous nous intéressons à l'optimisation d'un réseau de transport. L'énoncé du problème est le suivant : considérez un réseau routier composé de villes et de routes entre ces villes. L'objectif du projet est de construire un réseau de livraison capable de couvrir un ensemble de routes entre deux villes avec des camions. La difficulté réside dans le fait que chaque route a une puissance minimale requise, donc un camion ne peut emprunter cette route que si sa puissance est supérieure ou égale à la puissance minimale requise pour la route. Par conséquent, nous devons déterminer pour chaque paire de villes si un camion avec une puissance donnée peut trouver un chemin possible entre ces deux villes ; puis, optimiser la flotte de camions à acheter en fonction des routes à couvrir.
+
+Le réseau routier est représenté par un graphe non orienté G = (V, E). L'ensemble des sommets V correspond à l'ensemble des villes. L'ensemble des arêtes E correspond à l'ensemble des routes existantes entre deux villes.
+
+Nous considérons un ensemble T de routes, où chaque route t est une paire de deux villes distinctes, c'est-à-dire t = (v, v0) où v ∈ V, v0 ∈ V. L'ensemble T représente l'ensemble des paires de villes (v, v0) pour lesquelles nous voulons avoir un camion capable de transporter entre v et v0. Notez que le graphe est non orienté et nous ne distinguons pas la direction de la route. Chaque route t est également associée à un profit (ou utilité) ut ≥ 0, qui sera gagné par la société de livraison si la route t est couverte.
+
+Enfin, le transport est effectué par des camions. Chaque camion (désigné par K) a une puissance p et coûte un prix c. Le transport sur une route t = (v, v0) dans T sera possible si et seulement si nous pouvons trouver dans le graphe G un chemin de v à v0 où la puissance minimale de chaque arête est inférieure ou égale à p (c'est-à-dire que le camion a une puissance suffisante pour passer partout sur le chemin). On dit alors que la route t peut être couverte par le camion K considéré.
+
+Pour répondre au mieux au problème, qui consiste à maximiser le profit d'une entreprise en fonction du profit apporté par chaque route et du coût de chaque camion en fonction de sa puissance, nous avons procédé en deux parties principales : la mise en œuvre d'algorithmes pour trouver la puissance minimale pour parcourir une route ; et l'optimisation de l'acquisition de camions en fonction d'une liste de routes associée à un profit.
+
+## Organisation du dépôt
 
 Ce dépôt contient plusieurs dossiers et fichiers : 
 - le dossier `delivery_network` contient le code principal. C'est là qu'est la classe Graph.
