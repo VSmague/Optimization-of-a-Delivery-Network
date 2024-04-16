@@ -65,7 +65,6 @@ class Graph:
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
-    
 
     def __str__(self):
         """
@@ -220,7 +219,7 @@ class Graph:
         return self.get_path_with_power(src, dest, p), p
     #on suppose ici que la puissance est toujours un entier naturel
 
-    def min_power(self,src,dest): #question 6 : recherche dichotomique de puissance minimale
+    def min_power(self, src, dest): #question 6 : recherche dichotomique de puissance minimale
         """
         Determine the minimum power required for a truck to travel from the source (src) to the destination (dest), with a dichotomic search
 
@@ -266,181 +265,240 @@ class Graph:
         print(graphe)
         return None
     
-    def temps_10(f,k): #question 10
+    def temps_10(f, k): #question 10
+        """
+        Compute the time the function f takes to find the minimum power required for all the roads of the file k.
+
+        Parameters:
+        ----------
+            f : function
+                Determine the minimum power required for a truck to travel from a starting point to a destination
+            k : int
+                Corresponds to the input road file k
+        """
         import time
-        trajets=[]
-        temps=[]
-        file=open("input/routes."+str(k)+".in", "r")
+        trajets = []
+        temps = []
+        file = open("input/routes." + str(k) + ".in", "r")
         for i in range(10):
             edge = list(map(int, file.readline().split()))
-            if len(edge)==1:
-                nb_trajets=edge[0]
+            if len(edge) == 1:
+                nb_trajets = edge[0]
             else:
                 node1, node2, gain = edge
-                trajets.append((node1,node2))
+                trajets.append((node1, node2))
         file.close()
-        solution=[]
-        h=graph_from_file("input/network."+str(k)+".in")
-        for src,dest in trajets:
-            t_start=time.perf_counter()
-            solution.append(f(h,src,dest))
-            t_stop=time.perf_counter()
-            temps.append(t_stop-t_start)
-        print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",nb_trajets*sum(temps)/len(temps))
+        solution = []
+        h = graph_from_file("input/network." + str(k) + ".in")
+        for src, dest in trajets:
+            t_start = time.perf_counter()
+            solution.append(f(h, src, dest))
+            t_stop = time.perf_counter()
+            temps.append(t_stop - t_start)
+        print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:", nb_trajets * sum(temps) / len(temps))
         return solution
 
-    def makeset(pik,rank,node): #pour implémenter Kruskal : question 12
-        pik[node]=node
-        rank[node]=0
+    def makeset(self, pik, rank, node): #pour implémenter Kruskal : question 12
+        pik[node] = node
+        rank[node] = 0
         return None
 
-    def find(pik,node): #pour implémenter Kruskal : question 12
+    def find(self, pik, node): #pour implémenter Kruskal : question 12
         if pik[node] != node:
-            pik[node]= Graph.find(pik,pik[node])
+            pik[node] = self.find(pik, pik[node])
         return pik[node]
 
-    def union(pik,rank,node1,node2): #pour implémenter Kruskal : question 12
-        r1=Graph.find(pik,node1)
-        r2=Graph.find(pik,node2)
-        if r1==r2: return None
-        if rank[r1]>rank[r2]:
-            pik[r2]=r1
+    def union(self, pik, rank, node1, node2): #pour implémenter Kruskal : question 12
+        r1 = self.find(pik, node1)
+        r2 = self.find(pik, node2)
+        if r1 == r2:
+            return None
+        if rank[r1] > rank[r2]:
+            pik[r2] = r1
         else:
-            pik[r1]=r2
-            if rank[r1]==rank[r2]:
-                rank[r2]+=1
+            pik[r1] = r2
+            if rank[r1] == rank[r2]:
+                rank[r2] += 1
         return None
 
     def kruskal(self): #question 12
-        pik={}
-        rank={}
+        """
+        Compute the minimum spanning tree of the connected graph using Kruskal's algorithm
+        """
+        pik = {}
+        rank = {}
         for node in self.nodes:
-            Graph.makeset(pik,rank,node)
-        X=Graph([])
-        edges=[]
+            self.makeset(pik, rank, node)
+        X = Graph([])
+        edges = []
         for node in self.graph:
             for edge in self.graph[node]:
-                edges.append((node,edge[0],edge[1]))
-        edges.sort(key =lambda x: x[2])
+                edges.append((node, edge[0], edge[1]))
+        edges.sort(key=lambda x: x[2])
         for edge in edges:
-            if Graph.find(pik,edge[0])!=Graph.find(pik,edge[1]):
-                Graph.add_edge(X,edge[0],edge[1],edge[2])
-                Graph.union(pik,rank,edge[0],edge[1])
-        return(X)
+            if self.find(pik, edge[0]) != self.find(pik, edge[1]):
+                self.add_edge(X, edge[0], edge[1], edge[2])
+                self.union(pik, rank, edge[0], edge[1])
+        return X
     
     def pre_travail(self): #pour implémenter la question 14
-        list = self.connected_components()
-        X=Graph.kruskal(self)
-        visited_nodes={noeud: False for noeud in X.nodes}
-        predecesseurs={}
-        node_initial=X.nodes[0]
+        """
+        Compute the predecessors (with the power between the two nodes and the depht of the node) of each node in the minimum spanning tree of the connected graph, 'build a tree'
+        """
+        lst = self.connected_components()
+        X = self.kruskal()
+        visited_nodes = {noeud: False for noeud in X.nodes}
+        predecesseurs = {}
+        node_initial = X.nodes[0]
         for noeud in X.nodes:
-            if len(X.graph[noeud])>len(X.graph[node_initial]):
-                node_initial=noeud
+            if len(X.graph[noeud]) > len(X.graph[node_initial]):
+                node_initial = noeud
         component = [node_initial]
-        predecesseurs[node_initial]=[node_initial,0,0]
+        predecesseurs[node_initial] = [node_initial, 0, 0]
         visited_nodes[node_initial] = True
         while component != []:
-            node=component[0]
-            component=component[1:]
+            node = component[0]
+            component = component[1:]
             for neighbour in X.graph[node]:
-                power=neighbour[1]
-                neighbour=neighbour[0]
+                power = neighbour[1]
+                neighbour = neighbour[0]
                 if not visited_nodes[neighbour]:
                     visited_nodes[neighbour] = True
                     component.append(neighbour)
-                    predecesseurs[neighbour]=[node,power,predecesseurs[node][2]+1]
+                    predecesseurs[neighbour] = [node, power, predecesseurs[node][2] + 1]
         return predecesseurs
 
-    def min_power_ameliore(predecesseurs,src,dest): #question 14
-        path_b=[]
-        path_e=[]
-        power=0
-        profondeur_min=min([predecesseurs[src][2],predecesseurs[dest][2]])
-        profondeur_max=max([predecesseurs[src][2],predecesseurs[dest][2]])
-        while profondeur_max!=profondeur_min:
-            if profondeur_max==predecesseurs[src][2]:
+    def min_power_ameliore(self, predecesseurs, src, dest): #question 14
+        """
+        Determine the minimum power required for a truck to travel from the source (src) to the destination (dest) thanks to the Kruskal's algorithm
+
+        Parameters:
+        -----------
+        predecesseurs : set
+            Predecessors of each node, with its depth and the power between the node and its predecessor
+        src : NodeType
+            Starting point
+        dest : NodeType
+            Destination
+        """
+        path_b = []
+        path_e = []
+        power = 0
+        profondeur_min = min([predecesseurs[src][2], predecesseurs[dest][2]])
+        profondeur_max = max([predecesseurs[src][2], predecesseurs[dest][2]])
+        while profondeur_max != profondeur_min:
+            if profondeur_max == predecesseurs[src][2]:
                 path_b.append(src)
-                power=max([power,predecesseurs[src][1]])
-                src=predecesseurs[src][0]
+                power = max([power, predecesseurs[src][1]])
+                src = predecesseurs[src][0]
             else:
-                path_e.insert(0,dest)
-                power=max([power,predecesseurs[dest][1]])
-                dest=predecesseurs[dest][0]
-            profondeur_max-=1
-        while src!=dest:
+                path_e.insert(0, dest)
+                power = max([power, predecesseurs[dest][1]])
+                dest = predecesseurs[dest][0]
+            profondeur_max -= 1
+        while src != dest:
             path_b.append(src)
-            path_e.insert(0,dest)
-            power=max([power,predecesseurs[src][1],predecesseurs[dest][1]])
-            src=predecesseurs[src][0]
-            dest=predecesseurs[dest][0]
-        path=path_b+[src]+path_e
-        return path,power
+            path_e.insert(0, dest)
+            power = max([power, predecesseurs[src][1], predecesseurs[dest][1]])
+            src = predecesseurs[src][0]
+            dest = predecesseurs[dest][0]
+        path = path_b + [src] + path_e
+        return path, power
     
-    def temps_15(f,k): #question 15
+    def temps_15(f, k): #question 15
+        """
+        Compute the time the function f takes to find the minimum power required for all the roads of the file k.
+
+        Parameters:
+        ----------
+            f : function
+                Determine the minimum power required for a truck to travel from a starting point to a destination
+            k : int
+                Corresponds to the input road file k
+        """
         import time
-        solution=[]
-        file=open("input/routes."+str(k)+".in", "r")
-        nb_trajets=list(map(int, file.readline().split()))[0]
-        h=graph_from_file("input/network."+str(k)+".in")
-        x=Graph.pre_travail(h)
-        #fichier=open("output/routes."+str(k)+".out","a")
-        t_start=time.perf_counter()
+        solution = []
+        file = open("input/routes." + str(k) + ".in", "r")
+        nb_trajets = list(map(int, file.readline().split()))[0]
+        h = graph_from_file("input/network." + str(k) + ".in")
+        x = Graph.pre_travail(h)
+        #fichier = open("output/routes."+str(k)+".out","a")
+        t_start = time.perf_counter()
         for i in range(nb_trajets):
-            src,dest,gain = list(map(int, file.readline().split()))
-            path,power=f(x,src,dest)
+            src, dest, gain = list(map(int, file.readline().split()))
+            path, power = f(x, src, dest)
             #fichier.write(str(power)+"\n")
-            solution.append((path,power))
-        t_stop=time.perf_counter()
+            solution.append((path, power))
+        t_stop = time.perf_counter()
         file.close()
         #fichier.close()
         print("temps pour l'ensemble des trajets de la route"+str(k)+" en secondes:",t_stop-t_start)
         return solution
 
-    def trucks(k):
-        file=open("input/trucks."+str(k)+".in","r")
-        l_trucks=[]
-        nb_truck=list(map(int,file.readline().split()))[0]
+    def trucks(self, k):
+        """
+        Read the input truck file k to get a list of trucks
+
+        Parameters:
+        ----------
+            k : int
+                Corresponds to the input truck file k
+        """
+        file = open("input/trucks." + str(k) + ".in", "r")
+        l_trucks = []
+        nb_truck = list(map(int, file.readline().split()))[0]
         for i in range(nb_truck):
-            truck=list(map(int,file.readline().split()))
+            truck = list(map(int, file.readline().split()))
             l_trucks.append(truck)
         file.close()
         return l_trucks
     
-    def glouton(k_routes,k_camions,W):
-        file_trajet=open("input/routes."+str(k_routes)+".in", "r")
-        file_puissance=open("output/routes."+str(k_routes)+".out","r")
-        nb_trajet=list(map(int, file_trajet.readline().split()))[0]
-        efficacite=[]
+    def glouton(self, k_routes, k_camions, W):
+        """
+        Compute the profit a firm can make with a budget W, buying some trucks from a catalog, earning money by driving on some roads from a list.
+        A greedy approach is used.
+
+        Parameters:
+        ----------
+            k_routes : int
+                Corresponds to the input road file k_routes
+            k_camions : int
+                Corresponds to the intput truck file k_camions
+            W : numerical (int or float)
+        """
+        file_trajet = open("input/routes." + str(k_routes) + ".in", "r")
+        file_puissance = open("output/routes." + str(k_routes) + ".out", "r")
+        nb_trajet = list(map(int, file_trajet.readline().split()))[0]
+        efficacite = []
         for i in range(nb_trajet):
-            src,dest,gain=list(map(int, file_trajet.readline().split()))
-            power=list(map(int, file_puissance.readline().split()))[0]
-            efficacite.append([gain/(power+0.1),power,gain,i+1])
-        efficacite.sort(key= lambda x:x[0])
+            src, dest, gain = list(map(int, file_trajet.readline().split()))
+            power = list(map(int, file_puissance.readline().split()))[0]
+            efficacite.append([gain / (power + 0.1), power, gain, i+1])
+        efficacite.sort(key=lambda x: x[0])
         efficacite.reverse()
-        w_dep=0
-        gain_tot=0
-        l_trucks=Graph.trucks(k_camions)
-        bon_camion=[]
+        w_dep = 0
+        gain_tot = 0
+        l_trucks = self.trucks(k_camions)
+        bon_camion = []
         for trajet in efficacite:
-            puissance=trajet[1]
-            indice_truck=-1
-            cout_truck=trajet[2]
-            premier=True
+            puissance = trajet[1]
+            indice_truck = -1
+            cout_truck = trajet[2]
+            premier = True
             for j in range(len(l_trucks)):
-                if l_trucks[j][0]<puissance:
+                if l_trucks[j][0] < puissance:
                     continue
                 else:
-                    if premier or l_trucks[j][1]<cout_truck:
-                        premier=False
-                        indice_truck=j
-                        cout_truck=l_trucks[j][1]
-            bon_camion.append([indice_truck,cout_truck])
-        i=0
-        camion_et_trajet={camion[0]: [] for camion in bon_camion}
-        while len(bon_camion)>i and w_dep+bon_camion[i][1]<W:
+                    if premier or l_trucks[j][1] < cout_truck:
+                        premier = False
+                        indice_truck = j
+                        cout_truck = l_trucks[j][1]
+            bon_camion.append([indice_truck, cout_truck])
+        i = 0
+        camion_et_trajet = {camion[0]: [] for camion in bon_camion}
+        while len(bon_camion) > i and w_dep + bon_camion[i][1] < W:
             camion_et_trajet[bon_camion[i][0]].append(efficacite[i][3])
-            gain_tot+=efficacite[i][2]
-            w_dep+=bon_camion[i][1]
-            i+=1
-        return gain_tot,camion_et_trajet
+            gain_tot += efficacite[i][2]
+            w_dep += bon_camion[i][1]
+            i += 1
+        return gain_tot, camion_et_trajet
