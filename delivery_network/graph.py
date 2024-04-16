@@ -56,9 +56,9 @@ class Graph:
     def __init__(self, nodes=[]):
         """
         Initializes the graph with a set of nodes, and no edges. 
-        Parameters: 
+        Parameters :
         -----------
-        nodes: list, optional
+        nodes : list, optional
             A list of nodes. Default is empty.
         """
         self.nodes = nodes
@@ -85,13 +85,13 @@ class Graph:
 
         Parameters:
         -----------
-        node1: NodeType
+        node1 : NodeType
             First end (node) of the edge
-        node2: NodeType
+        node2 : NodeType
             Second end (node) of the edge
-        power_min: numeric (int or float)
+        power_min : numeric (int or float)
             Minimum power on this edge
-        dist: numeric (int or float), optional
+        dist : numeric (int or float), optional
             Distance between node1 and node2 on the edge. Default is 1.
         """
         if node1 not in self.graph:
@@ -113,9 +113,9 @@ class Graph:
 
         Parameters:
         -----------
-        node: NodeType
+        node : NodeType
             Node of interest, starting point of the dfs
-        visited_nodes: set
+        visited_nodes : set
             For each node, says whether it has already been visited during the dfs or not
         """
         component = [node]
@@ -148,18 +148,17 @@ class Graph:
         print(set(map(frozenset, self.connected_components())))
     
     def get_path_with_power(self, src, dest, power): #questions 3 et 5
-        """_summary_
+        """
+        Find a path from src to dest for a truck with a fixed power
 
         Parameters:
         -----------
-            src: NodeType
+            src : NodeType
                 source
-            dest: Node Type
+            dest : Node Type
                 destination
-            power: numeric (int or float)
-
-        Returns:
-            _type_: _description_
+            power : numeric (int or float)
+                power of the truck
         """
         lst = self.connected_components()
         n = len(lst)
@@ -173,13 +172,24 @@ class Graph:
         return self.chemin(src, dest, power)
 
     def chemin(self, s, t, power): #dijkstra pour question 3
+        """"
+        Find a path from s to t for a truck with a fixed power, s and t have to be in the same connected component, using Dijkstra method.
+
+        Parameters :
+            s : NodeType
+                starting point
+            t : NodeType
+                destination
+            power : numerical (int or float)
+                power of the truck
+        """
         Vu = set()
         d = {s: 0}
         predecesseurs = {}
         suivants = [(0, s)]  # Â tas de couples (d[x],x)
         while suivants != []:
             dx, x = suivants[0]
-            suivants=suivants[1:]
+            suivants = suivants[1:]
             if x in Vu:
                 continue
             Vu.add(x)
@@ -192,7 +202,8 @@ class Graph:
                     suivants.append((dy, y))
                     predecesseurs[y] = x
         path = [t]
-        if t not in d : return "pas de chemin possible avec cette puissance"
+        if t not in d:
+            return "pas de chemin possible avec cette puissance"
         x = t
         while x != s:
             x = predecesseurs[x]
@@ -210,33 +221,50 @@ class Graph:
     #on suppose ici que la puissance est toujours un entier naturel
 
     def min_power(self,src,dest): #question 6 : recherche dichotomique de puissance minimale
-        pmin=0
-        pmax=0
+        """
+        Determine the minimum power required for a truck to travel from the source (src) to the destination (dest), with a dichotomic search
+
+        Parameters :
+        -----------
+        src : NodeType
+            source
+        dest : NodeType
+            destination
+        """
+        pmin = 0
+        pmax = 0
         for nodes in self.graph:
             for voisins in self.graph[nodes]:
-                pmax=max(pmax,voisins[1])
-        while pmin+1<pmax:
-            p=(pmin+pmax)//2
-            if type(Graph.get_path_with_power(self,src,dest,p))==str:
-                pmin=p
+                pmax = max(pmax, voisins[1])
+        while pmin + 1 < pmax:
+            p = (pmin + pmax) // 2
+            if type(self.get_path_with_power(src, dest, p)) == str:
+                pmin = p
             else:
-                pmax=p
-        return Graph.get_path_with_power(self,src,dest,pmax),pmax
+                pmax = p
+        return self.get_path_with_power(src, dest, pmax), pmax
     
     def representation(self, nom): #question 7 : représentation visuelle des graphes
+        """
+        Print a representation of the graph.
+
+        Parameters :
+            nom : String
+                Title of the graph
+        """
         graphe = gr(format='png', engine="circo") 
-        key=self.graph.keys()
-        sauv=[]
-        for i in key: # on crée tous les sommets
+        key = self.graph.keys()
+        sauv = []
+        for i in key:# on crée tous les sommets
             print(i)
-            graphe.node(f"{i}",f"{i}")
+            graphe.node(f"{i}", f"{i}")
             for voisin in self.graph[i]:
                 if voisin[0] not in sauv:
                     graphe.edge(f"{i}", f"{voisin[0]}", label=f"p={voisin[1]},\n d={voisin[2]}")
             sauv.append(i)
         graphe.render(f"{nom}.dot")
         print(graphe)
-        return()
+        return None
     
     def temps_10(f,k): #question 10
         import time
