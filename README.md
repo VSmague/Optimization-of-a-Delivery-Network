@@ -33,6 +33,10 @@ The structure of the routes.x.in files is as follows:
 - The first line contains an integer corresponding to the number of routes in the set (T).
 - The following T lines each contain a route in the form 'city1 city2 utility', where utility is the profit gained if the corresponding route is covered.
 
+The structure of the trucks.x.in files is as follows:
+- The first line contains an integer corresponding to the number of trucks in the catalog.
+- The following K lines each contain a truck in the form 'power price', where power is the power of the truck, and price is its price.
+
 # ENSAE 1A : projet de programmation
 
 À travers ce projet de programmation, nous nous intéressons à l'optimisation d'un réseau de transport. L'énoncé du problème est le suivant : considérez un réseau routier composé de villes et de routes entre ces villes. L'objectif du projet est de construire un réseau de livraison capable de couvrir un ensemble de routes entre deux villes avec des camions. La difficulté réside dans le fait que chaque route a une puissance minimale requise, donc un camion ne peut emprunter cette route que si sa puissance est supérieure ou égale à la puissance minimale requise pour la route. Par conséquent, nous devons déterminer pour chaque paire de villes si un camion avec une puissance donnée peut trouver un chemin possible entre ces deux villes ; puis, optimiser la flotte de camions à acheter en fonction des routes à couvrir.
@@ -65,3 +69,7 @@ La structure des fichiers network.x.in est la suivante :
 La structure des fichiers routes.x.in est la suivante : 
 - la première ligne contient un entier qui correspond aux nombres de trajets dans l'ensemble (T)
 - les T lignes suivantes contiennent chacune un trajet sous la forme `ville1 ville2 utilité`, où utilité est le profit acquis si le trajet correspondant est couvert.
+
+La structure des fichiers trucks.x.in est la suivante : 
+- la première ligne contient un entier qui correspond aux nombres de camions dans le catalogue
+- les K lignes suivantes contiennent chacune un camion et sont composées de 2 nombres séparés par des espaces : 'puissance prix' où puissance est la puissance du camion est prix le prix du camion.
