@@ -39,7 +39,7 @@ The structure of the trucks.x.in files is as follows:
 
 ## Format of output files
 
-The output folder contains files output.x.out ($x \in {1, 2, 3, ..., 9}$) which correspond to the input files input.x.in. They contain the minimum power required to complete each route in the corresponding input file, and these powers are calculated by the min_power_amélioré function.
+The output folder contains files output.x.out ($x \in {1, 2, 3, ..., 9}$) which correspond to the input files input.x.in. They contain the minimum power required to complete each route in the corresponding input file, and these powers are calculated by the min_power_ameliore function.
 
 # ENSAE 1A : projet de programmation
 
@@ -80,5 +80,5 @@ La structure des fichiers trucks.x.in est la suivante :
 
 ## Format des fichiers d'output
 
-Le dossier output contient des fichiers output.x.out ($x \in \{1, 2, 3, ..., 9\}$) qui correspondent aux fichiers input.x.in. Ils contiennt la puissance minimale nécessaire pour réaliser chaque trajet du fichier input correspondant, et ces puissances sont calculées par la fonction min_power_amélioré.
+Le dossier output contient des fichiers output.x.out ($x \in \{1, 2, 3, ..., 9\}$) qui correspondent aux fichiers input.x.in. Ils contiennt la puissance minimale nécessaire pour réaliser chaque trajet du fichier input correspondant, et ces puissances sont calculées par la fonction min_power_ameliore.
 
