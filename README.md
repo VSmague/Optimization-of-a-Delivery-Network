@@ -23,7 +23,7 @@ This repository contains several folders and files:
 
 ## Format of input files
 
-The input folder contains 2 types of files: the network.x.in files ($x \in {00, 01, 02, 03, 04, 1, ..., 10}$) which contain the graphs, and the routes.x.in files ($x \in {1, ..., 10}$) which contain sets of routes for the corresponding graphs of $x$.
+The input folder contains 3 types of files: the network.x.in files ($x \in {00, 01, 02, 03, 04, 1, ..., 10}$) which contain the graphs, the routes.x.in files ($x \in {1, ..., 10}$) which contain sets of routes for the corresponding graphs of $x$, and the trucks.x.in files ($x \in{0, 1, 2\}) which contain trucks catalogs.
 
 The structure of the network.x.in files is as follows:
 - The first line consists of two integers separated by a space: the number of vertices (n) and the number of edges (m).
@@ -36,6 +36,10 @@ The structure of the routes.x.in files is as follows:
 The structure of the trucks.x.in files is as follows:
 - The first line contains an integer corresponding to the number of trucks in the catalog.
 - The following K lines each contain a truck in the form 'power price', where power is the power of the truck, and price is its price.
+
+## Format of output files
+
+The output folder contains files output.x.out ($x \in {1, 2, 3, ..., 9}$) which correspond to the input files input.x.in. They contain the minimum power required to complete each route in the corresponding input file, and these powers are calculated by the min_power_amélioré function.
 
 # ENSAE 1A : projet de programmation
 
@@ -60,7 +64,7 @@ Ce dépôt contient plusieurs dossiers et fichiers :
 
 ## Format des fichiers d'input
 
-Le dossier input contient 2 types de fichiers : les fichiers network.x.in ($x \in \{00, 01, 02, 03, 04, 1, ..., 10\}$) qui contiennent les graphes et les fichiers routes.x.in ($x \in \{1, ..., 10\}$) qui contiennent des ensembles de trajets pour les graphes de $x$ correspondant. 
+Le dossier input contient 3 types de fichiers : les fichiers network.x.in ($x \in \{00, 01, 02, 03, 04, 1, ..., 10\}$) qui contiennent les graphes, les fichiers routes.x.in ($x \in \{1, ..., 10\}$) qui contiennent des ensembles de trajets pour les graphes de $x$ correspondant, et les fichiers trucks.x.in ($x \in{0, 1, 2\}$) qui contiennent des catalogues de camions. 
 
 La structure des fichiers network.x.in est la suivante : 
 - la première ligne est composée de deux entiers séparés par un espace : le nombre de sommets (n) et le nombre d'arêtes (m)
@@ -73,3 +77,8 @@ La structure des fichiers routes.x.in est la suivante :
 La structure des fichiers trucks.x.in est la suivante : 
 - la première ligne contient un entier qui correspond aux nombres de camions dans le catalogue
 - les K lignes suivantes contiennent chacune un camion et sont composées de 2 nombres séparés par des espaces : 'puissance prix' où puissance est la puissance du camion est prix le prix du camion.
+
+## Format des fichiers d'output
+
+Le dossier output contient des fichiers output.x.out ($x \in \{1, 2, 3, ..., 9\}$) qui correspondent aux fichiers input.x.in. Ils contiennt la puissance minimale nécessaire pour réaliser chaque trajet du fichier input correspondant, et ces puissances sont calculées par la fonction min_power_amélioré.
+
